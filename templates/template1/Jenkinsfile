@@ -1,0 +1,14 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+          steps {
+            echo "${previewEnvHostname}"
+            echo "${emailRecipient}"
+            echo "${repositoryURL}"
+            echo "${creds}" 
+          }
+        }
+    }
+}
+

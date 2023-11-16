@@ -1,0 +1,18 @@
+type: pipeline-template
+version: 1
+name: Simple Template
+description: Simple Template
+parameters:
+  - name: previewEnvHostname
+    displayName: Preview env hostname
+    defaultValue: foo
+  - name: emailRecipient
+    displayName: Email address for build notifications
+    defaultValue: foo@bar.com
+  - name: repositoryURL
+    displayName: Repository URL
+    type: String
+  - name: creds
+    displayName: creds
+    type: CREDENTIALS
+

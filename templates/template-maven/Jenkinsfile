@@ -1,0 +1,117 @@
+pipeline {
+    
+    agent {
+        label "maven-agent"
+    }
+    
+    stages {
+        stage ("git_repo_1"){
+            steps{
+                dir ("clone-dir1"){
+                    git "${git_repo_1}"
+                    //sh "./script1.sh"
+                }
+            }
+        }
+        stage ("git_repo_2"){
+            steps{
+                dir ("clone-dir2"){
+		    git "${git_repo_2}"
+                }
+            }
+        }
+        
+        stage ("build"){
+            steps{
+                git "${build_repo}"
+                sh "${build_command}"
+                archiveArtifacts artifacts: 'target/*.jar'
+		junit 'target/surefire-reports/**/*.xml'
+            }
+        }
+        
+        
+        stage("build and test on ARCH") {
+            parallel {
+                stage("ARM32") {
+                    agent none
+               //     {
+               //     label "agent-ARM32"
+               //     }
+                    stages {
+                        stage("build") {
+                            steps {
+                                sleep 10
+                                sh " echo build ARM32 "
+                            }
+                        }
+                        stage("deploy") {
+                            steps {
+                                sh "echo deploy ARM32"
+                            }
+                        }
+                    }
+                }
+                stage("PC_Linux_64") {
+                    agent none
+                   //     {
+                   //     label "agent-PC_Linux_64"
+                   //     }
+                    stages {
+                        stage("build") {
+                            steps {
+                                sh "echo build PC Linux_64"
+                            }
+                        }
+                        stage("deploy") {
+                            steps {
+                                sh "echo deploy PC Linux_64"
+                            }
+                        }
+                    }
+                }
+                 stage("NTG7_plain") {
+                    agent none
+                   //     {
+                   //     label "agent-NTG7_plain"
+                   //     }
+                    stages {
+                        stage("build") {
+                            steps {
+                                sh "echo build NTG7_plain"
+                            }
+                        }
+                        stage("deploy") {
+                            steps {
+                                sh "echo deploy NTG7_plain"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage ("Sonar"){
+            environment {
+                SONAR_HOST_URL="${sonar_host}"
+                SONAR_TOKEN="${sonar_token}"
+                SONAR_SCANNER_OPTS="${sonar_scanner_options}"
+            }
+            steps {
+                
+                sh "sonar-scanner"
+                
+            }
+        }
+    }
+    
+    post {
+        // Clean after build - https://github.com/jenkinsci/ws-cleanup-plugin
+        always {
+            cleanWs()
+        }
+        success {
+            echo "Send mail"
+        }
+    }
+}

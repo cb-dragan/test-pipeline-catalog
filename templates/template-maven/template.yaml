@@ -1,0 +1,29 @@
+type: pipeline-template
+version: 1
+name: template-maven
+description: Template Maven
+parameters:
+  - name: git_repo_1
+    displayName: Git repo 1
+    defaultValue: https://github.com/pipeline-demo-caternberg/maven-executable-jar-example.git
+  - name: git_repo_2
+    displayName: Git repo 2
+    defaultValue: https://github.com/pipeline-demo-caternberg/maven-executable-jar-example.git
+  - name: build_repo
+    displayName: Build repo
+    defaultValue: https://github.com/pipeline-demo-caternberg/maven-executable-jar-example.git
+  - name: build_command
+    displayName: Build command (Maven)
+    defaultValue: mvn -Dmaven.test.failure.ignore clean install
+  - name: sonar_host
+    displayName: Sonar Host
+    defaultValue: YOUR_SONAR_HOST
+  - name: sonar_token
+    displayName: Sonar Token
+    defaultValue: YOUR_SONAR_TOKEN
+  - name: sonar_scanner_options
+    displayName: Sonar Scanner Options
+    defaultValue: -Dsonar.projectKey=maven -Dsonar.projectName=maven -Dsonar.java.binaries=target/classes
+  - name: creds
+    displayName: Credentials
+    type: CREDENTIALS
